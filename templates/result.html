@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>CardioVision - Prediction Results</title>
+  <meta content="Heart disease prediction results" name="description">
+  <meta content="heart disease, results, prediction, cardiology" name="keywords">
+
+  <!-- Favicons-->
+  <link href="../static/img/p4.jpg" rel="icon">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../static/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../static/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../static/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="../static/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="../static/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="../static/vendor/swiper/swiper-bundle.min.css" rel="stylesheet"> 
+  <link href="../static/css/style.css" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      background: #f5f7fa;
+    }
+
+    /* Fixed Header */
+    #header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: linear-gradient(135deg, #00203f 0%, #003b5c 100%);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      padding: 18px 0;
+      backdrop-filter: blur(10px);
+    }
+
+    #header .logo {
+      display: flex;
+      align-items: center;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+    }
+
+    #header .logo img {
+      height: 45px;
+      margin-right: 12px;
+      filter: brightness(0) invert(1);
+    }
+
+    #header .navbar ul {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      align-items: center;
+    }
+
+    #header .navbar a {
+      color: #ffffff;
+      text-decoration: none;
+      padding: 10px 25px;
+      font-weight: 500;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      margin-left: 15px;
+    }
+
+    #header .navbar a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    /* Main Results Section */
+    .results-section {
+      min-height: 100vh;
+      width: 100%;
+      background: linear-gradient(135deg, rgba(0, 32, 63, 0.94) 0%, rgba(0, 59, 92, 0.92) 100%),
+                  url('https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') center center;
+      background-size: cover;
+      background-attachment: fixed;
+      padding: 120px 0 80px;
+      position: relative;
+    }
+
+    .results-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(255, 255, 255, 0.01) 2px,
+          rgba(255, 255, 255, 0.01) 4px
+        );
+      pointer-events: none;
+    }
+
+    .results-content {
+      max-width: 1600px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Page Title */
+    .page-title {
+      text-align: center;
+      margin-bottom: 60px;
+      animation: fadeInDown 0.8s ease-out;
+    }
+
+    .page-title h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 15px;
+      text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .page-title .subtitle {
+      font-size: 1.2rem;
+      color: #b8d4e8;
+      font-weight: 400;
+    }
+
+    .page-title .divider {
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, #00bcd4, #2196f3);
+      margin: 20px auto;
+      border-radius: 2px;
+    }
+
+    /* Results Grid */
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    /* Result Card */
+    .result-card {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 20px;
+      padding: 0;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      animation: fadeInLeft 0.8s ease-out 0.2s both;
+      backdrop-filter: blur(10px);
+    }
+
+    .result-card.accuracy-card {
+      animation: fadeInRight 0.8s ease-out 0.3s both;
+    }
+
+    .card-header-custom {
+      background: linear-gradient(135deg, #00324f 0%, #004d73 100%);
+      color: white;
+      padding: 25px 35px;
+      border-bottom: 3px solid #2196f3;
+    }
+
+    .card-header-custom h3 {
+      margin: 0;
+      font-size: 1.6rem;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      align-items: center;
+    }
+
+    .card-header-custom h3 i {
+      margin-right: 12px;
+      font-size: 1.8rem;
+    }
+
+    .card-body-custom {
+      padding: 40px 35px;
+    }
+
+    /* Prediction Result Display */
+    .prediction-result {
+      padding: 35px;
+      border-radius: 15px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .prediction-result::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .positive-result {
+      background: linear-gradient(135deg, rgba(244, 67, 54, 0.15) 0%, rgba(229, 57, 53, 0.2) 100%);
+      border: 3px solid #ef5350;
+      color: #c62828;
+    }
+
+    .negative-result {
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.15) 0%, rgba(67, 160, 71, 0.2) 100%);
+      border: 3px solid #66bb6a;
+      color: #2e7d32;
+    }
+
+    .result-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      display: block;
+      position: relative;
+      z-index: 1;
+    }
+
+    .result-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      font-family: 'Poppins', sans-serif;
+      position: relative;
+      z-index: 1;
+    }
+
+    .result-description {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      line-height: 1.6;
+      position: relative;
+      z-index: 1;
+    }
+
+    .risk-level {
+      display: inline-block;
+      padding: 12px 25px;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-top: 15px;
+      background: rgba(255, 255, 255, 0.9);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Accuracy Section */
+    .accuracy-content {
+      text-align: center;
+    }
+
+    .accuracy-visual {
+      width: 100%;
+      max-width: 350px;
+      margin: 0 auto 30px;
+      position: relative;
+    }
+
+    .accuracy-visual img {
+      width: 100%;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .accuracy-stats {
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+      padding: 25px;
+      border-radius: 15px;
+      margin-top: 25px;
+    }
+
+    .accuracy-number {
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: #00324f;
+      font-family: 'Poppins', sans-serif;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .accuracy-label {
+      font-size: 1.1rem;
+      color: #1565c0;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .accuracy-description {
+      font-size: 1rem;
+      color: #455a64;
+      margin-top: 15px;
+    }
+
+    /* Model Info Section */
+    .model-info-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      margin-top: 40px;
+    }
+
+    .info-card {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 15px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.8s ease-out 0.4s both;
+      backdrop-filter: blur(10px);
+    }
+
+    .info-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .info-card i {
+      font-size: 3rem;
+      color: #2196f3;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    .info-card h4 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #00324f;
+      margin-bottom: 10px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .info-card p {
+      font-size: 1rem;
+      color: #546e7a;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* Action Button */
+    .action-button {
+      display: inline-block;
+      margin-top: 40px;
+      padding: 18px 45px;
+      background: linear-gradient(135deg, #2196f3 0%, #0d8bf2 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(33, 150, 243, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .action-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(33, 150, 243, 0.4);
+      background: linear-gradient(135deg, #1976d2 0%, #0b6ecc 100%);
+      color: white;
+    }
+
+    .action-button i {
+      margin-right: 10px;
+    }
+
+    /* Animations */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes fadeInRight {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .results-content {
+        max-width: 1000px;
+      }
+
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .page-title h1 {
+        font-size: 2.5rem;
+      }
+
+      .result-title {
+        font-size: 2rem;
+      }
+
+      .accuracy-number {
+        font-size: 2.5rem;
+      }
+
+      .results-section {
+        padding: 100px 20px 60px;
+      }
+
+      .results-content {
+        padding: 0 20px;
+      }
+
+      .card-body-custom {
+        padding: 30px 20px;
+      }
+
+      #header .logo {
+        font-size: 1.4rem;
+      }
+
+      #header .logo img {
+        height: 35px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .page-title h1 {
+        font-size: 2rem;
+      }
+
+      .result-title {
+        font-size: 1.6rem;
+      }
+
+      .card-header-custom h3 {
+        font-size: 1.3rem;
+      }
+
+      .info-card {
+        padding: 20px;
+      }
+
+      .model-info-section {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Back to top button */
+    .back-to-top {
+      position: fixed;
+      visibility: hidden;
+      opacity: 0;
+      right: 20px;
+      bottom: 20px;
+      z-index: 996;
+      background: linear-gradient(135deg, #2196f3 0%, #0d8bf2 100%);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      transition: all 0.4s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3);
+    }
+
+    .back-to-top:hover {
+      background: linear-gradient(135deg, #1976d2 0%, #0b6ecc 100%);
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(33, 150, 243, 0.4);
+    }
+
+    .back-to-top.active {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header id="header">
+    <div class="container d-flex align-items-center justify-content-between">
+      <a href="/" class="logo">
+        <img src="../static/img/11424097.png" alt="CardioVision">
+        CardioVision
+      </a>
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link" href="/"> New Prediction</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Results Section -->
+  <section class="results-section">
+    <div class="results-content">
+      <!-- Page Title -->
+      <div class="page-title">
+        <h1>Analysis Complete</h1>
+        <p class="subtitle">Your cardiovascular risk assessment results</p>
+        <div class="divider"></div>
+      </div>
+
+      <!-- Results Grid -->
+      <div class="results-grid">
+        
+        <!-- Prediction Result Card -->
+        <div class="result-card">
+          <div class="card-header-custom">
+            <h3>
+              <i class="bi bi-clipboard2-pulse"></i>
+              Prediction Report
+            </h3>
+          </div>
+          <div class="card-body-custom">
+            <!--<div class="prediction-result {% if 'POSITIVE' in result %}positive-result{% else %}negative-result{% endif %}">-->
+            <div class="prediction-result {% if is_positive %}positive-result{% else %}negative-result{% endif %}">
+              <!--<i class="result-icon bi {% if 'POSITIVE' in result %}bi-exclamation-triangle-fill{% else %}bi-check-circle-fill{% endif %}"></i>-->
+              <i class="result-icon bi {% if is_positive %}bi-exclamation-triangle-fill{% else %}bi-check-circle-fill{% endif %}"></i>
+              
+              <div class="result-title">{{ result }}</div>
+              
+              {% if positive %}
+              <p class="result-description">{{ positive }}</p>
+              {% endif %}
+              
+              {% if res2 %}
+              <div class="risk-level">
+                <i class="bi bi-bar-chart-fill"></i> Risk Level: <strong>{{ res2 }}</strong>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Model Accuracy Card -->
+        <!--<div class="result-card accuracy-card">-->
+        <!--  <div class="card-header-custom">-->
+        <!--    <h3>-->
+        <!--      <i class="bi bi-graph-up-arrow"></i>-->
+        <!--      Model Performance-->
+        <!--    </h3>-->
+        <!--  </div>-->
+        <!--  <div class="card-body-custom">-->
+        <!--    <div class="accuracy-content">-->
+        <!--      <div class="accuracy-visual">-->
+        <!--        <img src="../static/img/ezgif.com-animated-gif-maker.gif" alt="Model Accuracy Visualization">-->
+        <!--      </div>-->
+              
+        <!--      <div class="accuracy-stats">-->
+        <!--        <span class="accuracy-number">{{ accuracy }}%</span>-->
+        <!--        <p class="accuracy-label">Prediction Accuracy</p>-->
+        <!--        <p class="accuracy-description">-->
+        <!--          Based on comprehensive validation using clinical datasets-->
+        <!--        </p>-->
+        <!--      </div>-->
+        <!--    </div>-->
+        <!--  </div>-->
+        <!--</div>-->
+
+      </div>
+
+      <!-- Model Information Cards -->
+      <div class="model-info-section">
+        
+        <div class="info-card">
+          <i class="bi bi-cpu"></i>
+          <h4>Machine Learning</h4>
+          <p>Advanced algorithms trained on thousands of patient records</p>
+        </div>
+
+        <div class="info-card">
+          <i class="bi bi-shield-check"></i>
+          <h4>Clinically Validated</h4>
+          <p>Results verified against medical standards and guidelines</p>
+        </div>
+
+        <div class="info-card">
+          <i class="bi bi-speedometer2"></i>
+          <h4>Real-time Analysis</h4>
+          <p>Instant risk assessment using state-of-the-art technology</p>
+        </div>
+
+        <div class="info-card">
+          <i class="bi bi-file-medical"></i>
+          <h4>Comprehensive Report</h4>
+          <p>Detailed insights based on multiple clinical parameters</p>
+        </div>
+
+      </div>
+
+      <!-- Action Button -->
+      <div class="text-center">
+        <a href="/" class="action-button">
+          <i class="bi bi-arrow-repeat"></i>
+          Run New Prediction
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Back to Top -->
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center">
+    <i class="bi bi-arrow-up-short"></i>
+  </a>
+
+  <!-- Vendor JS Files -->
+  <script src="../static/vendor/aos/aos.js"></script>
+  <script src="../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../static/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../static/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="../static/vendor/php-email-form/validate.js"></script>
+  <script src="../static/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="../static/vendor/waypoints/noframework.waypoints.js"></script>
+  <script src="../static/js/main.js"></script>
+
+  <script>
+    // Back to top button
+    let backToTop = document.querySelector('.back-to-top');
+    
+    const toggleBacktotop = () => {
+      if (window.scrollY > 100) {
+        backToTop.classList.add('active');
+      } else {
+        backToTop.classList.remove('active');
+      }
+    };
+    
+    window.addEventListener('load', toggleBacktotop);
+    window.addEventListener('scroll', toggleBacktotop);
+
+    // Smooth scroll for back to top
+    if (backToTop) {
+      backToTop.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    }
+
+    // Add entrance animations on scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Observe elements
+    document.querySelectorAll('.info-card').forEach(card => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px)';
+      card.style.transition = 'all 0.6s ease-out';
+      observer.observe(card);
+    });
+  </script>
+
+</body>
+</html>
