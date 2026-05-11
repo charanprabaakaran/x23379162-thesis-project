@@ -1,0 +1,14 @@
+FROM public.ecr.aws/lambda/python:3.9
+
+# Copy requirements first
+COPY requirements.txt .
+
+# Install dependencies into Lambda root
+RUN pip install --no-cache-dir -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
+
+# Copy app and model
+COPY app.py ${LAMBDA_TASK_ROOT}
+COPY heart_model.sav ${LAMBDA_TASK_ROOT}
+
+# Set handler
+CMD ["app.lambda_handler"]
