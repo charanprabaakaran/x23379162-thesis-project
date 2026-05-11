@@ -1,0 +1,28 @@
+
+
+from locust import HttpUser, task, between
+
+class LambdaDirectTestUser(HttpUser):
+    wait_time = between(1, 2)
+
+    @task
+    def test_lambda_direct(self):
+        payload = {
+            "age": 52,
+            "sex": 1,
+            "cp": 0,
+            "trestbps": 125,
+            "chol": 212,
+            "fbs": 0,
+            "restecg": 1,
+            "thalach": 168,
+            "exang": 0,
+            "oldpeak": 1.0,
+            "slope": 2,
+            "ca": 2,
+            "thal": 3
+        }
+
+        with self.client.post("", json=payload, catch_response=True) as response:
+            if response.status_code != 200:
+                response.failure(f"{response.status_code} | {response.text}")
