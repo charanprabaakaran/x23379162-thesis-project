@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>CardioVision - Heart Disease Prediction</title>
+  <meta content="Advanced heart disease prediction system" name="description">
+  <meta content="heart disease, prediction, cardiology, health" name="keywords">
+
+  <!-- Favicons -->
+  <link href="../static/img/p4.jpg" rel="icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../static/vendor/aos/aos.css" rel="stylesheet">
+  <link href="../static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../static/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../static/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="../static/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="../static/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="../static/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <link href="../static/css/style.css" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Full Screen Hero Section with Background */
+    #hero {
+      height: auto;
+      width: 100%;
+      position: relative;
+      background: linear-gradient(135deg, rgba(0, 32, 63, 0.95) 0%, rgba(0, 59, 92, 0.92) 100%),
+                  url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') center center;
+      background-size: cover;
+      background-attachment: scroll;
+      padding: 60px 0;
+      margin: 0;
+      padding-bottom: 200px;
+    }
+
+    /* Overlay Pattern */
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(255, 255, 255, 0.01) 2px,
+          rgba(255, 255, 255, 0.01) 4px
+        );
+      pointer-events: none;
+    }
+
+    .hero-content {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 80px 40px 60px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header Section */
+    .page-header {
+      text-align: center;
+      margin-bottom: 50px;
+      animation: fadeInDown 0.8s ease-out;
+    }
+
+    .page-header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 15px;
+      text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+      letter-spacing: -0.5px;
+    }
+
+    .page-header .subtitle {
+      font-size: 1.25rem;
+      color: #b8d4e8;
+      font-weight: 400;
+      margin-bottom: 10px;
+    }
+
+    .page-header .divider {
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, #00bcd4, #2196f3);
+      margin: 20px auto;
+      border-radius: 2px;
+    }
+
+    /* Form Container */
+    .form-container {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 20px;
+      padding: 50px 60px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+
+    .form-section-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #00324f;
+      margin-bottom: 25px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #e0e7ef;
+      display: flex;
+      align-items: center;
+    }
+
+    .form-section-title i {
+      margin-right: 12px;
+      color: #2196f3;
+      font-size: 1.7rem;
+    }
+
+    /* Form Styling */
+    .form-label {
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+    }
+
+    .form-control, .form-select {
+      border: 2px solid #dce4ec;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background-color: #f8fafc;
+      color: #2c3e50;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: #2196f3;
+      box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+      background-color: #ffffff;
+      outline: none;
+    }
+
+    .form-control:hover, .form-select:hover {
+      border-color: #90caf9;
+    }
+
+    /* Form Groups */
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .row {
+      margin-left: -10px;
+      margin-right: -10px;
+    }
+
+    .row > [class*='col-'] {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+    /* Submit Button */
+    .submit-btn {
+      background: linear-gradient(135deg, #2196f3 0%, #0d8bf2 100%);
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 18px 50px;
+      font-size: 1.2rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(33, 150, 243, 0.3);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(33, 150, 243, 0.4);
+      background: linear-gradient(135deg, #1976d2 0%, #0b6ecc 100%);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .submit-btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    /* Result Section */
+    .result-section {
+      margin-top: 40px;
+      padding: 30px;
+      border-radius: 15px;
+      animation: slideIn 0.5s ease-out;
+      backdrop-filter: blur(5px);
+    }
+
+    .positive-result {
+      background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(229, 57, 53, 0.15) 100%);
+      border: 2px solid #ef5350;
+      color: #c62828;
+    }
+
+    .negative-result {
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(67, 160, 71, 0.15) 100%);
+      border: 2px solid #66bb6a;
+      color: #2e7d32;
+    }
+
+    .result-section h3 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+
+    .result-section p {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    /* Info Badge */
+    .info-badge {
+      display: inline-block;
+      background: #e3f2fd;
+      color: #1565c0;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    /* Animations */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .hero-content {
+        max-width: 1000px;
+      }
+      
+      .form-container {
+        padding: 40px 45px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .page-header h1 {
+        font-size: 2.5rem;
+      }
+
+      .page-header .subtitle {
+        font-size: 1.1rem;
+      }
+
+      .form-container {
+        padding: 30px 25px;
+      }
+
+      .submit-btn {
+        padding: 15px 40px;
+        font-size: 1.1rem;
+      }
+
+      .hero-content {
+        padding: 100px 20px 60px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .page-header h1 {
+        font-size: 2rem;
+      }
+
+      .form-section-title {
+        font-size: 1.2rem;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 15px 30px;
+      }
+    }
+
+    /* Select Dropdown Custom Styling */
+    select.form-control, select.form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%232c3e50' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 15px center;
+      background-size: 12px;
+      padding-right: 40px;
+    }
+
+    /* Loading State */
+    .submit-btn.loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .submit-btn.loading::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      top: 50%;
+      left: 50%;
+      margin-left: -8px;
+      margin-top: -8px;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spinner 0.6s linear infinite;
+    }
+
+    @keyframes spinner {
+      to {transform: rotate(360deg);}
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Full Screen Hero Section -->
+  <section id="hero">
+    <div class="hero-content">
+      
+      <!-- Page Header -->
+      <div class="page-header">
+        <div class="info-badge">
+          <i class="bi bi-shield-check"></i> Powered by Advanced AI
+        </div>
+        <h1>Heart Disease Prediction</h1>
+        <p class="subtitle">Comprehensive cardiovascular risk assessment using machine learning</p>
+        <div class="divider"></div>
+      </div>
+
+      <!-- Form Container -->
+      <div class="form-container">
+        <form action="/predictsc" method="POST" id="predictionForm">
+          
+          <!-- Personal Information Section -->
+          <div class="form-section-title">
+            <i class="bi bi-person-circle"></i>
+            Personal Information
+          </div>
+          
+          <div class="form-group row mb-4">
+            <div class="col-md-6">
+              <label for="age" class="form-label">Age (years)</label>
+              <input type="number" class="form-control" id="age" name="age" min="1" max="120" placeholder="Enter your age" required>
+            </div>
+            <div class="col-md-6">
+              <label for="sex" class="form-label">Sex</label>
+              <select class="form-control form-select" id="sex" name="sex" required>
+                <option disabled selected value="">Select sex</option>
+                <option value="0">Female</option>
+                <option value="1">Male</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Clinical Measurements Section -->
+          <div class="form-section-title">
+            <i class="bi bi-heart-pulse"></i>
+            Clinical Measurements
+          </div>
+
+          <div class="form-group row mb-4">
+            <div class="col-md-6">
+              <label for="cp" class="form-label">Chest Pain Type</label>
+              <select class="form-control form-select" id="cp" name="cp" required>
+                <option disabled selected value="">Select chest pain type</option>
+                <option value="0">Asymptomatic</option>
+                <option value="1">Atypical Angina</option>
+                <option value="2">Non-anginal Pain</option>
+                <option value="3">Typical Angina</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="trestbps" class="form-label">Resting Blood Pressure (mm Hg)</label>
+              <input type="number" class="form-control" id="trestbps" name="trestbps" min="50" max="250" placeholder="e.g., 120" required>
+            </div>
+          </div>
+
+          <div class="form-group row mb-4">
+            <div class="col-md-6">
+              <label for="chol" class="form-label">Serum Cholesterol (mg/dl)</label>
+              <input type="number" class="form-control" id="chol" name="chol" min="100" max="600" placeholder="e.g., 200" required>
+            </div>
+            <div class="col-md-6">
+              <label for="fbs" class="form-label">Fasting Blood Sugar > 120 mg/dl</label>
+              <select class="form-control form-select" id="fbs" name="fbs" required>
+                <option disabled selected value="">Select option</option>
+                <option value="0">No (≤ 120 mg/dl)</option>
+                <option value="1">Yes (> 120 mg/dl)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row mb-4">
+            <div class="col-md-6">
+              <label for="thalach" class="form-label">Maximum Heart Rate Achieved</label>
+              <input type="number" class="form-control" id="thalach" name="thalach" min="60" max="220" placeholder="e.g., 150" required>
+            </div>
+            <div class="col-md-6">
+              <label for="exang" class="form-label">Exercise Induced Angina</label>
+              <select class="form-control form-select" id="exang" name="exang" required>
+                <option disabled selected value="">Select option</option>
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Diagnostic Tests Section -->
+          <div class="form-section-title">
+            <i class="bi bi-activity"></i>
+            Diagnostic Test Results
+          </div>
+
+          <div class="form-group row mb-4">
+            <div class="col-md-6">
+              <label for="restecg" class="form-label">Resting ECG Results</label>
+              <select class="form-control form-select" id="restecg" name="restecg" required>
+                <option disabled selected value="">Select ECG result</option>
+                <option value="0">Left Ventricular Hypertrophy</option>
+                <option value="1">Normal</option>
+                <option value="2">ST-T Wave Abnormality</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="oldpeak" class="form-label">ST Depression (Exercise vs Rest)</label>
+              <input type="number" step="0.1" class="form-control" id="oldpeak" name="oldpeak" min="0" max="10" placeholder="e.g., 1.5" required>
+            </div>
+          </div>
+
+          <div class="form-group row mb-4">
+            <div class="col-md-4">
+              <label for="slope" class="form-label">Peak Exercise ST Slope</label>
+              <select class="form-control form-select" id="slope" name="slope" required>
+                <option disabled selected value="">Select slope</option>
+                <option value="0">Downsloping</option>
+                <option value="1">Flat</option>
+                <option value="2">Upsloping</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="ca" class="form-label">Major Vessels (Fluoroscopy)</label>
+              <select class="form-control form-select" id="ca" name="ca" required>
+                <option disabled selected value="">Select count</option>
+                <option value="0">0 vessels</option>
+                <option value="1">1 vessel</option>
+                <option value="2">2 vessels</option>
+                <option value="3">3 vessels</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="thal" class="form-label">Thalassemia</label>
+              <select class="form-control form-select" id="thal" name="thal" required>
+                <option disabled selected value="">Select type</option>
+                <option value="0">Fixed Defect</option>
+                <option value="1">Normal</option>
+                <option value="2">Reversible Defect</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="form-group text-center mt-5">
+            <button type="submit" class="submit-btn">
+              <span class="btn-text">Analyze Risk Profile</span>
+            </button>
+          </div>
+
+        </form>
+
+        <!-- Prediction Results -->
+        {% if result %}
+        <div class="result-section {% if 'POSITIVE' in result %}positive-result{% else %}negative-result{% endif %}">
+          <h3><i class="bi {% if 'POSITIVE' in result %}bi-exclamation-triangle-fill{% else %}bi-check-circle-fill{% endif %}"></i> {{ result }}</h3>
+          {% if positive %}
+          <p><strong>{{ positive }}</strong></p>
+          {% endif %}
+          {% if res2 %}
+          <p><strong>Risk Classification:</strong> {{ res2 }}</p>
+          {% endif %}
+        </div>
+        {% endif %}
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Vendor JS Files -->
+  <script src="../static/vendor/aos/aos.js"></script>
+  <script src="../static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../static/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../static/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="../static/vendor/php-email-form/validate.js"></script>
+  <script src="../static/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="../static/vendor/waypoints/noframework.waypoints.js"></script>
+  <script src="../static/js/main.js"></script>
+
+  <script>
+    // Form validation with visual feedback
+    const form = document.getElementById('predictionForm');
+    const submitBtn = document.querySelector('.submit-btn');
+
+    form.addEventListener('submit', function(e) {
+      const inputs = this.querySelectorAll('input[required], select[required]');
+      let valid = true;
+      
+      inputs.forEach(input => {
+        if (!input.value) {
+          valid = false;
+          input.style.borderColor = '#ef5350';
+          input.style.boxShadow = '0 0 0 3px rgba(239, 83, 80, 0.1)';
+        } else {
+          input.style.borderColor = '#66bb6a';
+          input.style.boxShadow = '0 0 0 3px rgba(102, 187, 106, 0.1)';
+        }
+      });
+      
+      if (!valid) {
+        e.preventDefault();
+        alert('Please fill in all required fields.');
+      } else {
+        submitBtn.classList.add('loading');
+      }
+    });
+
+    // Reset border color on input
+    const allInputs = document.querySelectorAll('input, select');
+    allInputs.forEach(input => {
+      input.addEventListener('input', function() {
+        this.style.borderColor = '#2196f3';
+        this.style.boxShadow = '0 0 0 3px rgba(33, 150, 243, 0.1)';
+      });
+
+      input.addEventListener('blur', function() {
+        if (this.value) {
+          this.style.borderColor = '#dce4ec';
+          this.style.boxShadow = 'none';
+        }
+      });
+    });
+
+    // Smooth scroll for any anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
